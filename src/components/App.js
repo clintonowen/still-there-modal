@@ -13,12 +13,26 @@ class App extends Component {
   }
 
   render () {
+    const portfolio = (
+      <a
+        href='https://clintonowen.com'
+        target='_blank'
+        rel='noopener noreferrer'>
+        Clinton Owen
+      </a>
+    );
+
     return (
       <React.Fragment>
-        <header>
-          <h1>Still There Modal</h1>
+        <header role='banner'>
+          <h1>
+            <a href='https://github.com/clintonowen/still-there-modal'>
+              Still There Modal
+            </a>
+          </h1>
         </header>
-        <main>
+
+        <main role='main'>
           <ActivityDialog
             timeoutMinutes={(15 / 60)}
             dialogMinutes={(5 / 60)}
@@ -29,8 +43,11 @@ class App extends Component {
           <Route exact path='/here' component={Here} />
           <Route exact path='/not-here' component={NotHere} />
         </main>
+
         <footer role='contentinfo'>
-          <p id='copyright'>© <a href='https://clintonowen.com' target='_blank'>Clinton Owen</a> 2019</p>
+          <p>
+            © {portfolio} 2019
+          </p>
         </footer>
       </React.Fragment>
     );

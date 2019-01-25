@@ -22,14 +22,21 @@ class ActivityDialog extends Component {
   }
 
   startWaiting () {
+    // The total time we will wait before deciding the user is inactive
     const msMain = this.props.timeoutMinutes * 60 * 1000;
+    // The amount of time the warning dialog will display
     const msDialog = this.props.dialogMinutes * 60 * 1000;
+    // The dialog should be hidden to start with
     this.props.dispatch(hideActivityDialog());
+    // Store the inactivity deadline for use in the countdown display
     this.props.dispatch(setDeadline(new Date().getTime() + msMain));
+    // Set the user to inactive after the wait
     this.mainTimeout = setTimeout(() => this.notHere(), msMain);
+    // Show the dialog for the specified amount of time before taking action
     this.dialogTimeout = setTimeout(() => this.show(), (msMain - msDialog));
   }
 
+  // Clear the timing events
   stopWaiting () {
     if (this.mainTimeout) {
       clearTimeout(this.mainTimeout);
@@ -47,14 +54,22 @@ class ActivityDialog extends Component {
   }
 
   show () {
+    // Clear the dialog timeout
+    clearTimeout(this.dialogTimeout);
     this.dialogTimeout = null;
+    // Show the dialog
     this.props.dispatch(showActivityDialog());
+    // Force a rerender every second to update the dialog countdown display
     this.timeLeftInterval = setInterval(() => this.forceUpdate(), 1000);
   }
 
   notHere () {
+    // Clear the main timeout
+    clearTimeout(this.mainTimeout);
     this.mainTimeout = null;
+    // Hide the dialog
     this.props.dispatch(hideActivityDialog());
+    // Perform the action supplied to props
     this.props.timeoutAction();
   }
 
@@ -74,7 +89,7 @@ class ActivityDialog extends Component {
         <div className='activity-dialog'>
           <h2>Are you still there?</h2>
           <p>
-            You have {secondsRemaining} {timeUnit} to respond.
+            You will be redirected in <span className='red'>{secondsRemaining}</span> {timeUnit}.
           </p>
           <button onClick={() => this.restartWaiting()}>
             I'm still here

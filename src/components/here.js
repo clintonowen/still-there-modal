@@ -12,9 +12,9 @@ class Here extends Component {
     return (
       <section className='here'>
         <h2>
-          You're here!
+          Hello!
         </h2>
-        <img src='/img/forrest-wave.gif' />
+        <img src='/img/forrest-wave.gif' alt='Waving Forrest Gump' />
       </section>
     );
   }

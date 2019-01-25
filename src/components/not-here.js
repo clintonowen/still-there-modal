@@ -17,9 +17,11 @@ class NotHere extends Component {
     return (
       <section className='not-here'>
         <h2>
-          You're not here :(
+          Goodbye :(
         </h2>
-        <button onClick={() => this.goHere()}>I'm here!</button>
+        <img src='/img/forrest-goodbye.gif' alt='Tired Forrest Gump' />
+        <br />
+        <button onClick={() => this.goHere()}>I'm back!</button>
       </section>
     );
   }

@@ -9,13 +9,16 @@
 }
 
 .activity-dialog {
-  background-color: lightgray;
+  background-color: #292d3c;
   border-radius: 4px;
-  height: 140px;
+  box-shadow: 0px 2px 8px rgb(30, 30, 30);
+  color: #E6E6E6;
   margin-left: auto;
   margin-right: auto;
   margin-top: 40px;
   padding: 10px;
+  padding-bottom: 20px;
+  padding-top: 1px;
   position: relative;
   text-align: center;
   width: 300px;
