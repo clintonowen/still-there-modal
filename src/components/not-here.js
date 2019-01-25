@@ -4,7 +4,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { setHereTrue } from '../actions/auth';
 import './not-here.css';
 
-class NotHere extends Component {
+export class NotHere extends Component {
   goHere () {
     this.props.dispatch(setHereTrue());
   }
