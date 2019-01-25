@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import Here from './here';
 
 describe('<Here />', () => {
-  it('renders without crashing', () => {
+  it('Should render without crashing', () => {
     shallow(<Here />);
   });
 });

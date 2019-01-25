@@ -3,17 +3,19 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { NotHere } from './not-here';
+import { setHereTrue } from '../actions/auth';
 
 describe('<NotHere />', () => {
-  it('renders without crashing', () => {
+  it('Should render without crashing', () => {
     shallow(<NotHere />);
   });
 
-  it('dispatches `setHereTrue` when I click the button', () => {
-    const setHereTrue = jest.fn();
-    const wrapper = shallow(<NotHere dispatch={() => jest.fn(setHereTrue())} />);
+  it('Should dispatch `setHereTrue` when I click the button', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(<NotHere dispatch={dispatch} />);
+    // console.log(wrapper.debug());
     const button = wrapper.find('.not-here button');
     button.simulate('click');
-    expect(setHereTrue).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith(setHereTrue());
   });
 });

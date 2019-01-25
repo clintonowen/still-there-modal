@@ -8,7 +8,7 @@ import {
 } from '../actions/activity';
 import './activity-dialog.css';
 
-class ActivityDialog extends Component {
+export class ActivityDialog extends Component {
   componentDidMount () {
     this.startWaiting();
   }
