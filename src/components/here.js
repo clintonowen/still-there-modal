@@ -14,13 +14,14 @@ class Here extends Component {
         <h2>
           You're here!
         </h2>
+        <img src='/img/forrest-wave.gif' />
       </section>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  here: state.activity.here
+  here: state.auth.here
 });
 
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking

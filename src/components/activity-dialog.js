@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import {
   showActivityDialog,
   hideActivityDialog,
-  setHereFalse,
   setDeadline
 } from '../actions/activity';
 import './activity-dialog.css';
@@ -15,24 +14,26 @@ class ActivityDialog extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!this.props.here && nextProps.here) {
+    if (!this.props.userIsActive && nextProps.userIsActive) {
       this.startWaiting();
-    } else if (this.props.here && !nextProps.here) {
+    } else if (this.props.userIsActive && !nextProps.userIsActive) {
       this.stopWaiting();
     }
   }
 
   startWaiting () {
+    const msMain = this.props.timeoutMinutes * 60 * 1000;
+    const msDialog = this.props.dialogMinutes * 60 * 1000;
     this.props.dispatch(hideActivityDialog());
-    this.props.dispatch(setDeadline(new Date().getTime() + 15000));
-    this.hereTimeout = setTimeout(() => this.notHere(), 15000);
-    this.showTimeout = setTimeout(() => this.show(), 10000);
+    this.props.dispatch(setDeadline(new Date().getTime() + msMain));
+    this.mainTimeout = setTimeout(() => this.notHere(), msMain);
+    this.dialogTimeout = setTimeout(() => this.show(), (msMain - msDialog));
   }
 
   stopWaiting () {
-    if (this.hereTimeout) {
-      clearTimeout(this.hereTimeout);
-      this.hereTimeout = null;
+    if (this.mainTimeout) {
+      clearTimeout(this.mainTimeout);
+      this.mainTimeout = null;
     }
     if (this.timeLeftInterval) {
       clearInterval(this.timeLeftInterval);
@@ -46,15 +47,15 @@ class ActivityDialog extends Component {
   }
 
   show () {
-    this.showTimeout = null;
+    this.dialogTimeout = null;
     this.props.dispatch(showActivityDialog());
     this.timeLeftInterval = setInterval(() => this.forceUpdate(), 1000);
   }
 
   notHere () {
-    this.hereTimeout = null;
+    this.mainTimeout = null;
     this.props.dispatch(hideActivityDialog());
-    this.props.dispatch(setHereFalse());
+    this.props.timeoutAction();
   }
 
   render () {
@@ -65,7 +66,7 @@ class ActivityDialog extends Component {
     }
 
     const now = new Date().getTime();
-    const secondsRemaining = Math.floor((this.props.deadline - now) / 1000) + 1;
+    const secondsRemaining = Math.ceil((this.props.deadline - now) / 1000);
     const timeUnit = secondsRemaining > 1 ? 'seconds' : 'second';
 
     return (
@@ -85,7 +86,6 @@ class ActivityDialog extends Component {
 }
 
 const mapStateToProps = state => ({
-  here: state.activity.here,
   showDialog: state.activity.showDialog,
   deadline: state.activity.deadline
 });

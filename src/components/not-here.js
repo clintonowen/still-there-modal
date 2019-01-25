@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
-import { setHereTrue } from '../actions/activity';
+import { setHereTrue } from '../actions/auth';
 import './not-here.css';
 
 class NotHere extends Component {
@@ -19,14 +19,14 @@ class NotHere extends Component {
         <h2>
           You're not here :(
         </h2>
-        <button onClick={() => this.goHere()}>I'm here</button>
+        <button onClick={() => this.goHere()}>I'm here!</button>
       </section>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  here: state.activity.here
+  here: state.auth.here
 });
 
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
