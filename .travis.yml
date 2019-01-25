@@ -2,6 +2,13 @@ language: node_js
 node_js: node
 cache:
   directories:
-    - node_modules
+  - node_modules
 env:
-  - CI=true
+- CI=true
+deploy:
+  provider: heroku
+  api_key:
+    secure: USSmPuqe9SkuXMBJQjvQJCBNlDonT8E4PjWGq6vCiR4moTgCCphM538/WAnAyppZX+a6aIEaGmS0qYv9YnGUx6MmqEtFeLs3zN+qIPKiMWUwCK21aUi6YjPyHEGIaQ27ws0hTndk1i2ckwvkaZBwvISrkVKiKdiHSNTNT7AsahPP7gqIofxH1uTFuyOohb8pAvImN1vkCHWJEHrvSwt/ESRbfEpdMRIHR+CT/GdJWDMNiLkV1WKzPYUQ7K+6NC8JGnCM3MRE6jAnzhyOaYE3Jpye801OkeZG8PY7OSr+FwFaVK4h+rb9xeHx1HgPBmNYriNMW/P1+8UAH5gEvkSuf8XcEGZSOYBrSkljZ9xWXfj9/a2qJOZVQHRzic2xrYBkUwwLXOVfShMLa4NbUyiBcj3khOkhAdbTVCD//OrFXUWtL6tBENndbNQOPoWTMl9qAyu30RsMV4mh1q/dZ90PWYJE/BzcP/mBVI9WQxZPTJq2JBvhJXehPAE/2VRWPhaDodU3Y7WXx5r+B9VAew6ZKLci/7PoBk1rtDR7zGfzmRehQODXqcxS7WVha5gWH3g0/RxS9CMbE11yDoaESKdQwqvb2UF1P4RYLFRKHtwZ/Kzg8sDMvimavkn0pP/pupQTjCZ8lwvOv5tDaJZ1hUKGEfCG3gDKplVaAMVkv9VvgSw=
+  app: still-there-modal
+  on:
+    repo: clintonowen/still-there-modal
