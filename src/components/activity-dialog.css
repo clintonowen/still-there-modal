@@ -1,0 +1,26 @@
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.activity-dialog {
+  background-color: lightgray;
+  border-radius: 4px;
+  height: 140px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  width: 300px;
+}
+
+.hidden {
+  display: none;
+}

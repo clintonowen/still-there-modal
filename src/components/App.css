@@ -1,0 +1,16 @@
+header {
+  text-align: center;
+}
+
+main {
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  max-width: 900px;
+  position: relative;
+}
+
+footer {
+  text-align: center;
+}

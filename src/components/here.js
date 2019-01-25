@@ -10,8 +10,10 @@ class Here extends Component {
     }
 
     return (
-      <section>
-        <header>Here</header>
+      <section className='here'>
+        <h2>
+          You're here!
+        </h2>
       </section>
     );
   }
