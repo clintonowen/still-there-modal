@@ -26,7 +26,10 @@ class App extends Component {
       <React.Fragment>
         <header role='banner'>
           <h1>
-            <a href='https://github.com/clintonowen/still-there-modal'>
+            <a
+              href='https://github.com/clintonowen/still-there-modal'
+              target='_blank'
+              rel='noopener noreferrer'>
               Still There Modal
             </a>
           </h1>
