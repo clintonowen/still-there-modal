@@ -34,6 +34,15 @@ describe('<ActivityDialog />', () => {
     MockDate.reset();
   });
 
+  it('Should set `this.state.timeLeft` to the appropriate value', () => {
+    const setShowDialog = jest.fn();
+    const dialogMinutes = 5 / 60;
+    const wrapper = shallow(<ActivityDialog
+      setShowDialog={setShowDialog}
+      dialogMinutes={dialogMinutes} />);
+    expect(wrapper.state().timeLeft).toEqual(dialogMinutes * 60);
+  });
+
   it('Should call `setTimeout` with the appropriate values', () => {
     const setShowDialog = jest.fn();
     jest.useFakeTimers();

@@ -6,7 +6,8 @@ export class ActivityDialog extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      deadline: null
+      deadline: null,
+      timeLeft: null
     };
   }
 
@@ -31,7 +32,8 @@ export class ActivityDialog extends Component {
     this.props.setShowDialog(false);
     // Store the inactivity deadline for use in the countdown display
     this.setState({
-      deadline: new Date().getTime() + msMain
+      deadline: new Date().getTime() + msMain,
+      timeLeft: msDialog / 1000
     });
     // Set the user to inactive after the wait
     this.mainTimeout = setTimeout(() => this.notHere(), msMain);
@@ -49,6 +51,9 @@ export class ActivityDialog extends Component {
       clearInterval(this.timeLeftInterval);
       this.timeLeftInterval = null;
     }
+    this.setState({
+      timeLeft: null
+    });
   }
 
   restartWaiting () {
@@ -57,13 +62,17 @@ export class ActivityDialog extends Component {
   }
 
   show () {
+    // Update the `timeLeft` every second for the countdown display
+    this.timeLeftInterval = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = Math.ceil((this.state.deadline - now) / 1000);
+      this.setState({ timeLeft });
+    }, 1000);
     // Clear the dialog timeout
     clearTimeout(this.dialogTimeout);
     this.dialogTimeout = null;
     // Show the dialog
     this.props.setShowDialog(true);
-    // Force a rerender every second to update the dialog countdown display
-    this.timeLeftInterval = setInterval(() => this.forceUpdate(), 1000);
   }
 
   notHere () {
@@ -83,16 +92,14 @@ export class ActivityDialog extends Component {
       );
     }
 
-    const now = new Date().getTime();
-    const secondsRemaining = Math.ceil((this.state.deadline - now) / 1000);
-    const timeUnit = secondsRemaining > 1 ? 'seconds' : 'second';
+    const timeUnit = this.state.timeLeft > 1 ? 'seconds' : 'second';
 
     return (
       <div className='modal'>
         <div className='activity-dialog'>
           <h2>Are you still there?</h2>
           <p>
-            You will be redirected in <span className='red'>{secondsRemaining}</span> {timeUnit}.
+            You will be redirected in <span className='red'>{this.state.timeLeft}</span> {timeUnit}.
           </p>
           <button onClick={() => this.restartWaiting()}>
             I'm still here
