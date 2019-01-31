@@ -15,10 +15,10 @@ export class ActivityDialog extends Component {
     this.startWaiting();
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (!this.props.userIsActive && nextProps.userIsActive) {
+  componentDidUpdate (prevProps) {
+    if (!prevProps.userIsActive && this.props.userIsActive) {
       this.startWaiting();
-    } else if (this.props.userIsActive && !nextProps.userIsActive) {
+    } else if (prevProps.userIsActive && !this.props.userIsActive) {
       this.stopWaiting();
     }
   }
