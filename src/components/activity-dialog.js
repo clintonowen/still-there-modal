@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {
-  showActivityDialog,
-  hideActivityDialog,
-  setDeadline
-} from '../actions/activity';
 import './activity-dialog.css';
 
 export class ActivityDialog extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      deadline: null,
+      timeLeft: null
+    };
+  }
+
   componentDidMount () {
     this.startWaiting();
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (!this.props.userIsActive && nextProps.userIsActive) {
+  componentDidUpdate (prevProps) {
+    if (!prevProps.userIsActive && this.props.userIsActive) {
       this.startWaiting();
-    } else if (this.props.userIsActive && !nextProps.userIsActive) {
+    } else if (prevProps.userIsActive && !this.props.userIsActive) {
       this.stopWaiting();
     }
   }
@@ -27,9 +29,12 @@ export class ActivityDialog extends Component {
     // The amount of time the warning dialog will display
     const msDialog = this.props.dialogMinutes * 60 * 1000;
     // The dialog should be hidden to start with
-    this.props.dispatch(hideActivityDialog());
+    this.props.setShowDialog(false);
     // Store the inactivity deadline for use in the countdown display
-    this.props.dispatch(setDeadline(new Date().getTime() + msMain));
+    this.setState({
+      deadline: new Date().getTime() + msMain,
+      timeLeft: msDialog / 1000
+    });
     // Set the user to inactive after the wait
     this.mainTimeout = setTimeout(() => this.notHere(), msMain);
     // Show the dialog for the specified amount of time before taking action
@@ -46,6 +51,9 @@ export class ActivityDialog extends Component {
       clearInterval(this.timeLeftInterval);
       this.timeLeftInterval = null;
     }
+    this.setState({
+      timeLeft: null
+    });
   }
 
   restartWaiting () {
@@ -54,13 +62,17 @@ export class ActivityDialog extends Component {
   }
 
   show () {
+    // Update the `timeLeft` every second for the countdown display
+    this.timeLeftInterval = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = Math.ceil((this.state.deadline - now) / 1000);
+      this.setState({ timeLeft });
+    }, 1000);
     // Clear the dialog timeout
     clearTimeout(this.dialogTimeout);
     this.dialogTimeout = null;
     // Show the dialog
-    this.props.dispatch(showActivityDialog());
-    // Force a rerender every second to update the dialog countdown display
-    this.timeLeftInterval = setInterval(() => this.forceUpdate(), 1000);
+    this.props.setShowDialog(true);
   }
 
   notHere () {
@@ -68,7 +80,7 @@ export class ActivityDialog extends Component {
     clearTimeout(this.mainTimeout);
     this.mainTimeout = null;
     // Hide the dialog
-    this.props.dispatch(hideActivityDialog());
+    this.props.setShowDialog(false);
     // Perform the action supplied to props
     this.props.timeoutAction();
   }
@@ -80,16 +92,14 @@ export class ActivityDialog extends Component {
       );
     }
 
-    const now = new Date().getTime();
-    const secondsRemaining = Math.ceil((this.props.deadline - now) / 1000);
-    const timeUnit = secondsRemaining > 1 ? 'seconds' : 'second';
+    const timeUnit = this.state.timeLeft > 1 ? 'seconds' : 'second';
 
     return (
       <div className='modal'>
         <div className='activity-dialog'>
           <h2>Are you still there?</h2>
           <p>
-            You will be redirected in <span className='red'>{secondsRemaining}</span> {timeUnit}.
+            You will be redirected in <span className='red'>{this.state.timeLeft}</span> {timeUnit}.
           </p>
           <button onClick={() => this.restartWaiting()}>
             I'm still here
@@ -100,10 +110,5 @@ export class ActivityDialog extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  showDialog: state.activity.showDialog,
-  deadline: state.activity.deadline
-});
-
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
-export default withRouter(connect(mapStateToProps)(ActivityDialog));
+export default withRouter(ActivityDialog);

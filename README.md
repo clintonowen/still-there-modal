@@ -1,10 +1,10 @@
-# [Still There Modal](https://still-there-modal.herokuapp.com/here)
+# [Still There Modal](https://still-there-modal.herokuapp.com)
 
 <!-- [![NPM Version][npm-image]][npm-url] -->
 [![Build Status](https://travis-ci.org/clintonowen/still-there-modal.svg?branch=master)](https://travis-ci.org/clintonowen/still-there-modal)
 <!-- [![Downloads Stats][npm-downloads]][npm-url] -->
 
-## [Live App](https://still-there-modal.herokuapp.com/here)
+## [Live App](https://still-there-modal.herokuapp.com)
 
 A customizable React component to check if a user is still active.
 

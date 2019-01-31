@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
-import { setHereFalse } from '../actions/auth';
 import ActivityDialog from './activity-dialog';
 import Here from './here';
 import NotHere from './not-here';
 import './App.css';
 
 class App extends Component {
-  handleNotHere () {
-    this.props.dispatch(setHereFalse());
+  constructor (props) {
+    super(props);
+    this.state = {
+      here: true,
+      showDialog: false
+    };
+  }
+
+  handleSetHere (here) {
+    this.setState({ here });
+  }
+
+  handleSetShowDialog (showDialog) {
+    this.setState({ showDialog });
   }
 
   render () {
@@ -39,12 +49,22 @@ class App extends Component {
           <ActivityDialog
             timeoutMinutes={(15 / 60)}
             dialogMinutes={(5 / 60)}
-            timeoutAction={() => this.handleNotHere()}
-            userIsActive={this.props.here}
+            timeoutAction={() => this.handleSetHere(false)}
+            userIsActive={this.state.here}
+            showDialog={this.state.showDialog}
+            setShowDialog={showDialog => this.handleSetShowDialog(showDialog)}
           />
           <Route exact path='/' render={() => (<Redirect to='/here' />)} />
-          <Route exact path='/here' component={Here} />
-          <Route exact path='/not-here' component={NotHere} />
+          <Route
+            exact path='/here'
+            render={props => <Here {...props} here={this.state.here} />} />
+          <Route
+            exact path='/not-here'
+            render={props => <NotHere
+              {...props}
+              here={this.state.here}
+              setHere={here => this.handleSetHere(here)} />
+            } />
         </main>
 
         <footer role='contentinfo'>
@@ -57,9 +77,5 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  here: state.auth.here
-});
-
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
-export default withRouter(connect(mapStateToProps)(App));
+export default withRouter(App);
