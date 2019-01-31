@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import './here.css';
 
@@ -20,9 +19,5 @@ class Here extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  here: state.auth.here
-});
-
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
-export default withRouter(connect(mapStateToProps)(Here));
+export default withRouter(Here);

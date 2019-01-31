@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {
-  showActivityDialog,
-  hideActivityDialog,
-  setDeadline
-} from '../actions/activity';
 import './activity-dialog.css';
 
 export class ActivityDialog extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      deadline: null
+    };
+  }
+
   componentDidMount () {
     this.startWaiting();
   }
@@ -27,9 +28,11 @@ export class ActivityDialog extends Component {
     // The amount of time the warning dialog will display
     const msDialog = this.props.dialogMinutes * 60 * 1000;
     // The dialog should be hidden to start with
-    this.props.dispatch(hideActivityDialog());
+    this.props.setShowDialog(false);
     // Store the inactivity deadline for use in the countdown display
-    this.props.dispatch(setDeadline(new Date().getTime() + msMain));
+    this.setState({
+      deadline: new Date().getTime() + msMain
+    });
     // Set the user to inactive after the wait
     this.mainTimeout = setTimeout(() => this.notHere(), msMain);
     // Show the dialog for the specified amount of time before taking action
@@ -58,7 +61,7 @@ export class ActivityDialog extends Component {
     clearTimeout(this.dialogTimeout);
     this.dialogTimeout = null;
     // Show the dialog
-    this.props.dispatch(showActivityDialog());
+    this.props.setShowDialog(true);
     // Force a rerender every second to update the dialog countdown display
     this.timeLeftInterval = setInterval(() => this.forceUpdate(), 1000);
   }
@@ -68,7 +71,7 @@ export class ActivityDialog extends Component {
     clearTimeout(this.mainTimeout);
     this.mainTimeout = null;
     // Hide the dialog
-    this.props.dispatch(hideActivityDialog());
+    this.props.setShowDialog(false);
     // Perform the action supplied to props
     this.props.timeoutAction();
   }
@@ -81,7 +84,7 @@ export class ActivityDialog extends Component {
     }
 
     const now = new Date().getTime();
-    const secondsRemaining = Math.ceil((this.props.deadline - now) / 1000);
+    const secondsRemaining = Math.ceil((this.state.deadline - now) / 1000);
     const timeUnit = secondsRemaining > 1 ? 'seconds' : 'second';
 
     return (
@@ -100,10 +103,5 @@ export class ActivityDialog extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  showDialog: state.activity.showDialog,
-  deadline: state.activity.deadline
-});
-
 // Deal with update blocking - https://reacttraining.com/react-router/web/guides/dealing-with-update-blocking
-export default withRouter(connect(mapStateToProps)(ActivityDialog));
+export default withRouter(ActivityDialog);
